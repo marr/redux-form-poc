@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import Form from './form/Form';
 import { connect } from 'react-redux';
-import { loadData } from './actions/widgets'
+import { loadData } from './actions/widgets';
+import { formValueSelector } from 'redux-form';
 
 import logo from './logo.svg';
 import './App.css';
-
-const initialValues = {
-  widgets: ['2']
-}
 
 class App extends Component {
 
@@ -16,9 +13,9 @@ class App extends Component {
     this.props.loadData()
   }
 
-  componentDidUpdate(prevProps) {
-    console.log(prevProps, this.props)
-  }
+  //componentDidUpdate(prevProps) {
+    //console.log(prevProps, this.props)
+  //}
 
   handleSubmit(values) {
     console.log(values)
@@ -26,7 +23,7 @@ class App extends Component {
 
   render() {
     const { widgets } = this.props
-    console.log(widgets)
+    const initialValues = { widgets }
     return (
       <div className="App">
         <div className="App-header">
@@ -35,25 +32,33 @@ class App extends Component {
         </div>
         <div className="App-intro">
           <pre className="App-state">
+          form:
             {JSON.stringify(this.props.form, null, 2)}
+          <br />
+          widgets:
             {JSON.stringify(this.props.widgets, null, 2)}
-
           </pre>
           <Form
+            enableReinitialize={true}
             initialValues={initialValues}
             onSubmit={this.handleSubmit}
-            widgets={this.props.widgets}
           />
         </div>
       </div>
     );
   }
 }
+const selector = formValueSelector('widgets');
 
-const mapStateToProps = ({ form, widgets }) => {
+const selectedWidgets = ["2"]
+const mapStateToProps = state => {
+  const formWidgets = selector(state, 'widgets');
   return {
-    form,
-    widgets
+    form: state.form,
+    widgets: state.widgets.map(widget => {
+      widget.selected = selectedWidgets.includes(widget.id)
+      return widget
+    })
   }
 }
 

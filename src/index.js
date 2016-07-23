@@ -7,6 +7,7 @@ import widgets from './reducers/widgetApp';
 import './index.css';
 
 const store = createStore(widgets, window.devToolsExtension && window.devToolsExtension());
+
 ReactDOM.render(
   <Provider store={store}>
     <App />

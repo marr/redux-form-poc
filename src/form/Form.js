@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { reduxForm, Field, FieldArray } from 'redux-form';
 
-const Widget = ({ input }) => {
+const Widget = props => {
   //const widget = input.props.widgets.find(w => w.id === input.value)
   //delete input.widgets
+  console.log(props)
   return (
     <label>
-      Widget #{/*widget.name*/}
-      <input type="checkbox" {...input} defaultChecked />
+      <input type="checkbox" {...props.input} />
     </label>
   )
 }
 
-const renderWidget = (fields, name, i) => {
+const renderWidget = (fields, widget, i) => {
   return (
     <div key={i}>
-      <Field component={Widget} name={name} onClick={() => {
-        fields.remove(i)
-      }}  />
+      <Field component="input" name={`${widget}.name`} />
+      <Field component="input" type="checkbox" name={`${widget}.selected`} />
     </div>
   )
 }
@@ -32,14 +32,12 @@ class Form extends Component {
 
   render() {
     const { handleSubmit, widgets } = this.props
-    console.log(widgets)
     return (
       <form className="Form" onSubmit={handleSubmit}>
         <div className="Form-header">
           <h2>Form with FieldArray</h2>
         </div>
-        <FieldArray component={renderWidgets}
-          name="widgets" />
+        <FieldArray component={renderWidgets} name="widgets" />
         <button type="submit">Submit</button>
       </form>
     );
@@ -47,5 +45,6 @@ class Form extends Component {
 }
 
 const form = 'widgets';
-export default reduxForm({ form })(Form);
+Form = reduxForm({ form })(Form);
 
+export default Form;
