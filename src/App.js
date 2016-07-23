@@ -13,12 +13,13 @@ class App extends Component {
     this.props.loadData()
   }
 
-  //componentDidUpdate(prevProps) {
-    //console.log(prevProps, this.props)
-  //}
-
   handleSubmit(values) {
-    console.log(values)
+    const widgets = values.widgets.map(widget => {
+      if (widget.selected) {
+        return widget.id
+      }
+    }).filter(widget => widget)
+    console.log(widgets)
   }
 
   render() {
