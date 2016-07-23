@@ -16,6 +16,10 @@ class App extends Component {
     this.props.loadData()
   }
 
+  componentDidUpdate(prevProps) {
+    console.log(prevProps, this.props)
+  }
+
   handleSubmit(values) {
     console.log(values)
   }
@@ -32,6 +36,8 @@ class App extends Component {
         <div className="App-intro">
           <pre className="App-state">
             {JSON.stringify(this.props.form, null, 2)}
+            {JSON.stringify(this.props.widgets, null, 2)}
+
           </pre>
           <Form
             initialValues={initialValues}
