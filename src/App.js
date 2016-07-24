@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import Form from './form/Form';
 import { connect } from 'react-redux';
 import { loadData } from './actions/widgets';
-import { formValueSelector } from 'redux-form';
-
+import { SubmissionError } from 'redux-form';
 import logo from './logo.svg';
 import './App.css';
+
+const selectedWidgets = ["2"]
 
 class App extends Component {
 
@@ -18,7 +19,21 @@ class App extends Component {
       if (widget.selected) {
         return widget.id
       }
+      return ''
     }).filter(widget => widget)
+
+    const shouldFail = Math.random() >= 0.5
+    if (shouldFail) {
+      console.log('should fail')
+      const error = new SubmissionError({
+        widgets: {
+          _error: 'Widget problem',
+        },
+        _error: 'Form error'
+      })
+      return Promise.reject(error)
+    }
+
     console.log(widgets)
   }
 
@@ -42,18 +57,14 @@ class App extends Component {
           <Form
             enableReinitialize={true}
             initialValues={initialValues}
-            onSubmit={this.handleSubmit}
-          />
+            onSubmit={this.handleSubmit}          />
         </div>
       </div>
     );
   }
 }
-const selector = formValueSelector('widgets');
 
-const selectedWidgets = ["2"]
 const mapStateToProps = state => {
-  const formWidgets = selector(state, 'widgets');
   return {
     form: state.form,
     widgets: state.widgets.map(widget => {
